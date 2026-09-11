@@ -17,30 +17,30 @@ export default function Sidebar(){
             <nav className="space-y-2">
                 <a
                 href="#"
-                className="block rounded-lg px-4 py-2 hover:bg-gray-200 hover:text-[#1A2331] my-2 flex"
+                className="group my-2 flex rounded-lg px-4 py-2 hover:bg-gray-200 hover:text-[#1A2331]"
                 >
-                <House className="mr-3 text-[#3B82F6]" /> All Tasks
+                <House className="mr-3 text-[#3B82F6] group-hover:text-[#8FB8FF]" /> All Tasks
                 </a>
 
                 <a
                 href="#"
-                className="block rounded-lg px-4 py-2 hover:bg-gray-200 hover:text-[#1A2331] my-2 flex"
+                className="group block rounded-lg px-4 py-2 hover:bg-gray-200 hover:text-[#1A2331] my-2 flex"
                 >
-                <Calendar className="mr-3 text-[#3B82F6]" />Today
+                <Calendar className="mr-3 text-[#3B82F6] group-hover:text-[#8FB8FF]" />Today
                 </a>
 
                 <a
                 href="#"
-                className="block rounded-lg px-4 py-2 hover:bg-gray-200 hover:text-[#1A2331] my-2 flex"
+                className="group block rounded-lg px-4 py-2 hover:bg-gray-200 hover:text-[#1A2331] my-2 flex"
                 >
-                <Star className="mr-3 text-[#3B82F6]" />Important
+                <Star className="mr-3 text-[#3B82F6] group-hover:text-[#8FB8FF]" />Important
                 </a>
 
                 <a
                 href="#"
-                className="block rounded-lg px-4 py-2 hover:bg-gray-200 hover:text-[#1A2331] my-2 flex"
+                className="group block rounded-lg px-4 py-2 hover:bg-gray-200 hover:text-[#1A2331] my-2 flex"
                 >
-                <CircleCheck className="mr-3 text-[#3B82F6]" />Completed
+                <CircleCheck className="mr-3 text-[#3B82F6] group-hover:text-[#8FB8FF]" />Completed
                 </a>
 
             </nav>
@@ -50,9 +50,9 @@ export default function Sidebar(){
             <nav className="space-y-2">
                 <a
                 href="#"
-                className="block rounded-lg px-4 py-2 hover:bg-gray-200 hover:text-[#1A2331] my-2 flex"
+                className="group block rounded-lg px-4 py-2 hover:bg-gray-200 hover:text-[#1A2331] my-2 flex"
                 >
-                <Plus className="mr-3 text-[#3B82F6]" />Settings   
+                <Plus className="mr-3 text-[#3B82F6] group-hover:text-[#8FB8FF]" />Settings   
                 </a>
             </nav>
         </aside>
