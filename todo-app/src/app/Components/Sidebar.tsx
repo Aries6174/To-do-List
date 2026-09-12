@@ -4,7 +4,7 @@ import {
   Calendar,
   Star,
   CircleCheck,
-  Plus
+  Settings
 } from "lucide-react";
 
 export default function Sidebar(){
@@ -52,7 +52,7 @@ export default function Sidebar(){
                 href="#"
                 className="group block rounded-lg px-4 py-2 hover:bg-gray-200 hover:text-[#1A2331] my-2 flex"
                 >
-                <Plus className="mr-3 text-[#3B82F6] group-hover:text-[#8FB8FF]" />Settings   
+                <Settings className="mr-3 text-[#3B82F6] group-hover:text-[#8FB8FF]" />Settings   
                 </a>
             </nav>
         </aside>
