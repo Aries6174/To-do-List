@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Modal from "./Modal";
 import TaskForm from "./TaskForm";
+import { Task } from "@/types/task";
 
 import {Plus} from "lucide-react"
 
 
 
-export default function AddTaskButton(){
+export default function AddTaskButton({ onAddTask }: {onAddTask: (task: Task) => void}){
     const[isOpen, setIsOpen] = useState(false);
 
     return(
@@ -22,7 +23,7 @@ export default function AddTaskButton(){
 
             {isOpen && (
                 <Modal onClose={() => setIsOpen(false)}>
-                    <TaskForm />
+                    <TaskForm onAddTask={onAddTask} />
                 </Modal>
             )}
         </>

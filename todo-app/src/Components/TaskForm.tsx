@@ -1,5 +1,8 @@
 "use client";
 
+import { Task } from "@/types/task"
+import { useState } from "react";
+
 import{
     Star,
     Calendar,
@@ -10,7 +13,37 @@ import{
 } from "lucide-react"
 
 
-export default function TaskForm(){
+export default function TaskForm({
+    onAddTask
+}: {
+    onAddTask: (task: Task) => void
+}) {
+
+
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [category, setCategory] = useState("");
+    const [dueDate, setDueDate] = useState("");
+    const [priority, setPriority] = useState<"low"| "mid" | "high">("mid");
+    const [favorite, setFavorite] = useState(false);
+
+    const handleAddTask = () => {
+        const newTask: Task = {
+            id: Date.now(),
+            title: title,
+            description: description,
+            category: category,
+            dueDate: dueDate,
+            priority: priority,
+            favorite: favorite,
+            completed: false,
+        };
+
+        onAddTask(newTask);
+        
+    }
+
+
     return(
         <div>
             {/*Name of Form*/}
@@ -24,6 +57,8 @@ export default function TaskForm(){
             <input
                 type="text"
                 placeholder="Enter task name"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
                 className="mb-4 w-full rounded-lg border border-gray-300 p-2"
             />
 
@@ -35,6 +70,8 @@ export default function TaskForm(){
 
             <textarea
                 placeholder="Enter description"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
                 className="mb-4 w-full rounded-lg border border-gray-300 p-2"
             />
 
@@ -45,8 +82,9 @@ export default function TaskForm(){
             </label>
 
             <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
                 className="mb-4 w-full rounded-lg border border-[#E2E8F0] bg-white px-4 py-2.5 text-[#1E293B] outline-none focus:border-[#3B82F6]"
-                defaultValue=""
             >
                 <option value="" disabled>Select a Category</option>
                 <option value="work">Work</option>
@@ -63,6 +101,8 @@ export default function TaskForm(){
                 
             <input 
                 type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
                 className="mb-4 w-full rounded-lg border border-[#E2E8F0] bg-white px-4 py-2 text-[#1E293B] outline-none focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6]"
             />
 
@@ -80,11 +120,13 @@ export default function TaskForm(){
                         type="radio"
                         name="priority"
                         value="low"
+                        checked={priority === "low"}
+                        onChange={() => setPriority("low")}
                         className="peer hidden"
                     />
 
                     <div className="m-2 h-2 w-2 rounded-full border border-[#3B82F6] group-hover:bg-[#3B82F6] peer-checked:bg-[#3B82F6]"></div>
-                    <p className="text-[#64748B] group-hover:text-black peer-checked:text-black">
+                    <p className="text-[#64748B] group-hover:text-black">
                         Low
                     </p>
                 </label>
@@ -95,6 +137,8 @@ export default function TaskForm(){
                         type="radio"
                         name="priority"
                         value="mid"
+                        checked={priority === "mid"}
+                        onChange={() => setPriority("mid")}
                         className="peer hidden"
                     />
 
@@ -110,6 +154,8 @@ export default function TaskForm(){
                         type="radio"
                         name="priority"
                         value="high"
+                        checked={priority === "high"}
+                        onChange={() => setPriority("high")}
                         className="peer hidden"
                     />
 
@@ -124,9 +170,13 @@ export default function TaskForm(){
 
             {/*FAVORITES?*/}
             <label className="flex cursor-pointer">
-                <input type="checkbox" className="peer hidden" />
+                <input
+                    type="checkbox"
+                    checked={favorite}
+                    onChange={(e) => setFavorite(e.target.checked)}
+                    className="peer hidden" />
 
-                <Star className="h-5 w-5 m-1 text-[#64748B] peer-checked:fill-[#F59E0B] peer-checked:text-[#F59E0B]" /><p className="m-1" >Add to Favorites</p>
+                <Star className="h-5 w-5 m-1 text-[#64748B] peer-checked:fill-[#F59E0B] peer-checked:text-black" /><p className="m-1" >Add to Favorites</p>
             </label>
 
             {/*END BUTTONS*/}
@@ -135,7 +185,10 @@ export default function TaskForm(){
                     Cancel
                 </button>
 
-                <button className="rounded-lg bg-[#3b82f6] px-4 py-2 text-white">
+                <button 
+                    onClick={handleAddTask}
+                    className="rounded-lg bg-[#3b82f6] px-4 py-2 text-white"
+                >
                     Add Task
                 </button>
             </div>

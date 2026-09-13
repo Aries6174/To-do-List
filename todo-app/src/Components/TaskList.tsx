@@ -1,16 +1,22 @@
 import {Calendar, Clock, CircleCheck} from "lucide-react"
-import TaskCard from "@/app/Components/TaskCard"
+import TaskCard from "@/Components/TaskCard"
+import { Task } from "@/types/task"
 
-export default function TaskList(){
+export default function TaskList({ tasks }: { tasks: Task[] }){
     return(
         <div className="w-full rounded-lg border border-[#E2E8F0] p-4">
+            <p>Tasks: {tasks.length}</p>
 
             {/*Task Information (TODAY) */}
             <h1 className="flex text-lg font-bold "><Calendar className="mr-2" />Today</h1>
             
             <hr className="border-gray-300 m-2" />
             <div className="flex m-1">
-                <TaskCard />
+                {tasks
+                    .filter((task) => !task.completed)
+                    .map((task) => (
+                        <TaskCard key={task.id} task={task} />
+                    ))}
             </div>
 
             {/*Task Information (LATER) */}
@@ -18,7 +24,7 @@ export default function TaskList(){
             
             <hr className="border-gray-300 m-2" />
             <div className="flex m-1">
-                <TaskCard />
+                {/*<TaskCard />*/}
             </div>
 
 
@@ -27,7 +33,11 @@ export default function TaskList(){
             
             <hr className="border-gray-300 m-2" />
             <div className="flex m-1">
-                <TaskCard />
+                {tasks
+                    .filter((task) => task.completed)
+                    .map((task) => (
+                        <TaskCard key={task.id} task={task} />
+                    ))}
             </div>
 
         </div>
