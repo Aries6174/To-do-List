@@ -1,12 +1,34 @@
+"use client";
+
 import {Star, MoreHorizontal} from "lucide-react";
 import{ Task } from "@/types/task"
 
-export default function TaskCard({ task }: { task: Task }) {
+export default function TaskCard({ task, onTaskUpdate }: { task: Task; onTaskUpdate: (task:Task) => void; }) {
+    const handleComplete = async () => {
+        const response = await fetch(`/api/tasks/${task.id}`, {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body:JSON.stringify({
+            completed: !task.completed,
+        }),
+    });
+
+    const updatedTask = await response.json();
+    onTaskUpdate(updatedTask);
+
+    };
 
     return(
         <div className="flex w-full items-center p-2">
             <h2 className="m-1">
-                <input type="checkbox" className="mr-2 h-4 w-4"></input>
+                <input
+                    type="checkbox"
+                    className="mr-2 h-4 w-4"
+                    checked={task.completed}
+                    onChange={handleComplete}    
+                />
                 {task.title}
             </h2>
             <h2 className ="ml-auto text-[#7E8B9E]">

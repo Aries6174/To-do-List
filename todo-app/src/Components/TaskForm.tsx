@@ -27,17 +27,24 @@ export default function TaskForm({
     const [priority, setPriority] = useState<"low"| "mid" | "high">("mid");
     const [favorite, setFavorite] = useState(false);
 
-    const handleAddTask = () => {
-        const newTask: Task = {
-            id: Date.now(),
-            title: title,
-            description: description,
-            category: category,
-            dueDate: dueDate,
-            priority: priority,
-            favorite: favorite,
-            completed: false,
-        };
+
+    const handleAddTask = async () => {
+        const response = await fetch("/api/tasks", {
+            method: "POST",
+            headers:{
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                title,
+                description,
+                category,
+                dueDate,
+                priority,
+                favorite
+            }),
+        });
+
+        const newTask = await response.json();
 
         onAddTask(newTask);
         

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Task } from "@/types/task"
 
 import Sidebar from "@/Components/Sidebar";
@@ -9,18 +9,18 @@ import AddTaskButton from "@/Components/AddTaskButton"
 import TaskList from "@/Components/TaskList"
 
 export default function Home() {
-  const [tasks, setTasks] = useState<Task[]>([
-    {
-      id: 1,
-      title: "Test Task",
-      description: "This is a test task!",
-      category: "work",
-      dueDate: "2026-09-25",
-      priority: "high",
-      favorite: false,
-      completed: false, 
-    },
-  ]);
+  const [tasks, setTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    const getTasks = async () => {
+      const response = await fetch("/api/tasks");
+      const tasks = await response.json();
+      
+      setTasks(tasks);
+    }
+
+    getTasks();
+  }, []);
 
   const addTask = (newTask:Task) => {
     setTasks((currentTasks) => [...currentTasks, newTask]);
@@ -46,7 +46,15 @@ export default function Home() {
           <AddTaskButton onAddTask={addTask} />
         </div>
         <div className="px-8">
-          <TaskList tasks={tasks} />
+          <TaskList
+            tasks={tasks} 
+            onTaskUpdate={(updatedTask) => {
+              setTasks((currentTask) =>
+                currentTask.map((task) =>
+                  task.id === updatedTask.id ? updatedTask: task
+                ));
+            }} 
+          />
         </div>
       </div>
     </main>
