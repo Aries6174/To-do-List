@@ -23,7 +23,10 @@ export default function AddTaskButton({ onAddTask }: {onAddTask: (task: Task) =>
 
             {isOpen && (
                 <Modal onClose={() => setIsOpen(false)}>
-                    <TaskForm onAddTask={onAddTask} />
+                    <TaskForm
+                        onAddTask={onAddTask}
+                        onClose={() => setIsOpen(false)}
+                    />
                 </Modal>
             )}
         </>

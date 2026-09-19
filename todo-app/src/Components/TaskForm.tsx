@@ -14,39 +14,53 @@ import{
 
 
 export default function TaskForm({
-    onAddTask
+    onAddTask,
+    task,
+    onClose
 }: {
-    onAddTask: (task: Task) => void
+    onAddTask: (task: Task) => void;
+    task?: Task;
+    onClose: () => void;
 }) {
 
+    const [title, setTitle] = useState(task?.title ?? "");
+    const [description, setDescription] = useState(task?.description ?? "");
+    const [category, setCategory] = useState(task?.category ?? "");
+    const [dueDate, setDueDate] = useState(task?.dueDate?? "");
+    const [priority, setPriority] = useState<"low"| "mid" | "high">(task?.priority ?? "mid");
+    const [favorite, setFavorite] = useState(task?.favorite ?? false);
+    const [errors, setErrors] = useState<Record<string, string[]>>({});
 
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [category, setCategory] = useState("");
-    const [dueDate, setDueDate] = useState("");
-    const [priority, setPriority] = useState<"low"| "mid" | "high">("mid");
-    const [favorite, setFavorite] = useState(false);
 
-
-    const handleAddTask = async () => {
-        const response = await fetch("/api/tasks", {
-            method: "POST",
-            headers:{
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                title,
-                description,
-                category,
-                dueDate,
-                priority,
-                favorite
+    const handleSubmit = async () => {
+        setErrors({})
+        const response = await fetch(
+            task ? `/api/tasks/${task.id}` : "/api/tasks",
+            {
+                method: task ? "PATCH" : "POST",
+                headers:{
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    title,
+                    description,
+                    category,
+                    dueDate,
+                    priority,
+                    favorite
             }),
-        });
+        }
+    );
 
-        const newTask = await response.json();
+    const savedTask = await response.json();
 
-        onAddTask(newTask);
+    if(!response.ok){
+        setErrors(savedTask.errors ?? {});
+        return;
+    }
+
+    onAddTask(savedTask); 
+
         
     }
 
@@ -54,12 +68,18 @@ export default function TaskForm({
     return(
         <div>
             {/*Name of Form*/}
-            <h1 className="mb-5 text-4xl font-bold">Add Task</h1>
+            <h1 className="mb-5 text-4xl font-bold">
+                {task ? "Edit Task" : "Add Task"}
+            </h1>
 
             {/*TASK NAME*/}
             <label className="flex mb-2 block text-m font-medium">
                 <File className="h-5 w-5 mr-2" />Task Name
             </label>
+
+            {errors.title && (
+                <p className="mt-1 text-sm text-red-500">{errors.title[0]}</p>
+            )}
 
             <input
                 type="text"
@@ -88,6 +108,12 @@ export default function TaskForm({
                 <Tag className="h-5 w-5 mr-2" />Category
             </label>
 
+            {errors.category && (
+                <p className="mt-1 text-sm text-red-500">
+                    {errors.category[0]}
+                </p>
+            )}
+
             <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
@@ -106,6 +132,12 @@ export default function TaskForm({
                 <Calendar className="h-5 w-5 mr-2" />Due Date
             </label>
                 
+            {errors.dueDate && (
+                <p className="mt-1 text-sm text-red-500">
+                    {errors.dueDate[0]}
+                </p>
+            )}
+
             <input 
                 type="date"
                 value={dueDate}
@@ -188,15 +220,17 @@ export default function TaskForm({
 
             {/*END BUTTONS*/}
             <div className="flex justify-end gap-2">
-                <button className="rounded-lg border px-4 py-2">
+                <button
+                    onClick={onClose}
+                    className="rounded-lg border px-4 py-2 hover:bg-[#7E8B9E]/20">
                     Cancel
                 </button>
 
                 <button 
-                    onClick={handleAddTask}
-                    className="rounded-lg bg-[#3b82f6] px-4 py-2 text-white"
+                    onClick={handleSubmit}
+                    className="rounded-lg bg-[#3b82f6] px-4 py-2 text-white hover:bg-[#3b82f6]/80"
                 >
-                    Add Task
+                    {task ? "Save Changes" : "Add Task"}
                 </button>
             </div>
 

@@ -1,4 +1,5 @@
 import { db } from "@/prisma/db";
+import { taskSchema } from "@/lib/validations/task"
 
 export async function PATCH(
     request: Request,
@@ -7,11 +8,28 @@ export async function PATCH(
     const { id } = await params;
     const body = await request.json();
 
+    const result = taskSchema.partial().safeParse(body);
+
+    if (!result.success) {
+        return Response.json(
+            { errors: result.error.flatten().fieldErrors },
+            { status: 400 }
+        );
+    }
+
+    const updateData: Record<string, unknown> = {}
+
+    if (body.title !== undefined) updateData.title = body.title;
+    if (body.description !== undefined) updateData.description = body.description;
+    if (body.category !== undefined) updateData.category = body.category;
+    if (body.dueDate !== undefined) updateData.dueDate = body.dueDate;
+    if (body.priority !== undefined) updateData.priority = body.priority;
+    if (body.favorite !== undefined) updateData.favorite = body.favorite;
+    if (body.completed !== undefined) updateData.completed = body.completed;
+
     await db.orm.public.Task
         .where({ id: Number(id) })
-        .update({
-            completed: body.completed,
-        });
+        .update(updateData);
 
     const updatedTask = await db.orm.public.Task
         .where({ id: Number(id) })
