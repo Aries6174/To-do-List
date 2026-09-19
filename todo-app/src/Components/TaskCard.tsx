@@ -3,7 +3,7 @@
 import {Star, MoreHorizontal} from "lucide-react";
 import{ Task } from "@/types/task"
 
-export default function TaskCard({ task, onTaskUpdate }: { task: Task; onTaskUpdate: (task:Task) => void; }) {
+export default function TaskCard({ task, onTaskUpdate, onTaskDelete }: { task: Task; onTaskUpdate: (task:Task) => void; onTaskDelete: (taskId: number) => void; }) {
     const handleComplete = async () => {
         const response = await fetch(`/api/tasks/${task.id}`, {
         method: "PATCH",
@@ -16,9 +16,20 @@ export default function TaskCard({ task, onTaskUpdate }: { task: Task; onTaskUpd
     });
 
     const updatedTask = await response.json();
+
     onTaskUpdate(updatedTask);
 
     };
+
+    const handleDelete = async () => {
+        const response = await fetch(`/api/tasks/${task.id}`, { 
+            method: "DELETE",
+        });
+
+        if (response.ok){
+            onTaskDelete(task.id);
+        }
+    }
 
     return(
         <div className="flex w-full items-center p-2">
@@ -41,8 +52,8 @@ export default function TaskCard({ task, onTaskUpdate }: { task: Task; onTaskUpd
                 <button>
                     <Star className="h-6 w-6 hover:text-black-400 hover:fill-yellow-400" />
                 </button>
-                <button>
-                    <MoreHorizontal className="h-6 w-6 hover:text-[#7E8B9E]-400" />
+                <button onClick={handleDelete} >
+                    <MoreHorizontal className="h-6 w-6 hover:text-[#7E8B9E]" />
                 </button>
             </div>
         </div>

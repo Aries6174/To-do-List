@@ -53,7 +53,12 @@ export default function Home() {
                 currentTask.map((task) =>
                   task.id === updatedTask.id ? updatedTask: task
                 ));
-            }} 
+            }}
+            
+            onTaskDelete={(taskId) => {
+              setTasks((currentTasks) =>
+                currentTasks.filter((task) => task.id !== taskId))
+            }}
           />
         </div>
       </div>
