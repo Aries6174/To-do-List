@@ -37,10 +37,40 @@ export default function TaskCard({ task, onTaskUpdate, onTaskDelete }: { task: T
         }
     }
 
+    const handleFavorite = async () => {
+        const response = await fetch(`/api/tasks/${task.id}`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                favorite: !task.favorite,
+            }),
+        });
+
+        const updatedTask = await response.json();
+
+        onTaskUpdate(updatedTask);
+    }
+
+    const formattedDate = task.dueDate
+        ? new Date(task.dueDate).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+        })
+        : "No due date";
+
+
     return(
         <>
-            <div className="flex w-full items-center p-2">
-                <h2 className="m-1">
+            <div className="flex w-full flex-wrap items-center gap-3 rounded-lg border border-[#E2E8F0] p-3 transition hover:bg-[#F8FAFC]">
+                <h2 className={`m-1 min-w-0 flex-1 ${
+                    task.completed
+                        ? "text-[#7E8B9E] line-through"
+                        : "text-black"
+                }`}
+                >
                     <input
                         type="checkbox"
                         className="mr-2 h-4 w-4"
@@ -49,15 +79,36 @@ export default function TaskCard({ task, onTaskUpdate, onTaskDelete }: { task: T
                     />
                     {task.title}
                 </h2>
-                <h2 className ="ml-auto text-[#7E8B9E]">
-                    {task.category}
+                <h2 className ="ml-auto flex items-center gap-3">
+                    <span className="text-[#7E8B9E]">
+                        {task.category}
+                    </span>
+
+                    <span
+                        className={`rounded-full px-2 py-1 text-xs font-medium ${
+                            task.priority === "high"
+                            ? "bg-red-100 text-red-600"
+                            : task.priority === "mid"
+                            ? "bg-yellow-100 text-yellow-600"
+                            : "bg-blue-100 text-blue-600"
+                        }`}
+                    >
+                        {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                    </span>
                 </h2>
                 <h2 className ="ml-8 text-[#7E8B9E]">
-                    {task.dueDate}
+                    {formattedDate}
                 </h2>
                 <div className="ml-8 flex items-center gap-2">
-                    <button>
-                        <Star className="h-6 w-6 hover:text-black-400 hover:fill-yellow-400" />
+                    <button onClick={handleFavorite}>
+                        <Star 
+                            className={`h-6 w-6 hover:text-yellow-400 hover:fill-yellow-400 ${
+                            task.favorite
+                                ? "fill-yellow-400 text-yellow-400"
+                                : "text-[#7E8B9E]"
+                            }`}
+        
+                        />
                     </button>
                     <div className="relative">
                         <button onClick={() => setIsMenuOpen(!isMenuOpen)} >
@@ -81,7 +132,7 @@ export default function TaskCard({ task, onTaskUpdate, onTaskDelete }: { task: T
                                         handleDelete();
                                         setIsMenuOpen(false);
                                     }}
-                                    className="block w-full px-3 py-2 text-left text-red-500 hovering:bg-gray-100"
+                                    className="block w-full px-3 py-2 text-left text-red-500 hover:bg-gray-100"
                                 >
                                     Delete
                                 </button>

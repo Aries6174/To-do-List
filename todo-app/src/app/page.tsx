@@ -10,14 +10,45 @@ import TaskList from "@/Components/TaskList"
 
 export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+
+  const filteredTasks = tasks.filter((task) => {
+    const matchesSearch = 
+      task.title.toLowerCase().includes(search.toLowerCase()) ||
+      (task.description ?? "").toLowerCase().includes(search.toLowerCase()) ||
+      task.category.toLowerCase().includes(search.toLowerCase());
+
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "active" && !task.completed) ||
+      (filter === "completed" && task.completed)||
+      (filter === "favorites" && task.favorite);
+
+      return matchesSearch && matchesFilter;
+  });
 
   useEffect(() => {
     const getTasks = async () => {
-      const response = await fetch("/api/tasks");
-      const tasks = await response.json();
-      
-      setTasks(tasks);
-    }
+      try{
+        const response = await fetch("/api/tasks");
+
+        if (!response.ok){
+          throw new Error("Failed to fetch task");
+        }
+        const tasks = await response.json();
+        
+        setTasks(tasks);
+        setLoading(false);
+      } catch (error) {
+        setError(true);
+      } finally{
+        setLoading(false);
+      }
+    };
 
     getTasks();
   }, []);
@@ -32,7 +63,10 @@ export default function Home() {
       <Sidebar />
 
       <div className="flex flex-1 flex-col">  {/*With Header*/}
-        <Header />
+        <Header 
+          onSearch={setSearch}
+          onFilterChange={setFilter}   
+        />
 
         <div className="flex p-8 justify-between"> {/*Top Message*/}
           <div className="self-start">
@@ -46,20 +80,34 @@ export default function Home() {
           <AddTaskButton onAddTask={addTask} />
         </div>
         <div className="px-8">
-          <TaskList
-            tasks={tasks} 
-            onTaskUpdate={(updatedTask) => {
-              setTasks((currentTask) =>
-                currentTask.map((task) =>
-                  task.id === updatedTask.id ? updatedTask: task
-                ));
-            }}
-            
-            onTaskDelete={(taskId) => {
-              setTasks((currentTasks) =>
-                currentTasks.filter((task) => task.id !== taskId))
-            }}
-          />
+          {loading ? (
+            <div className="py-10 text-center text-[#7e8b9e]">
+              Loading tasks...
+              </div>
+              ) : error ? (
+                <div className="py-10 text-center text-red-500">
+                  Failed to load tasks.
+                </div>
+              ) : filteredTasks.length === 0 ? (
+                <div className="py-10 text-center text-[#7e8b9e]">
+                  No tasks found.
+                  </div>
+              ) : (
+              <TaskList
+                tasks={filteredTasks} 
+                onTaskUpdate={(updatedTask) => {
+                  setTasks((currentTask) =>
+                    currentTask.map((task) =>
+                      task.id === updatedTask.id ? updatedTask: task
+                    ));
+                }}
+                
+                onTaskDelete={(taskId) => {
+                  setTasks((currentTasks) =>
+                    currentTasks.filter((task) => task.id !== taskId))
+                }}
+              />
+          )}
         </div>
       </div>
     </main>

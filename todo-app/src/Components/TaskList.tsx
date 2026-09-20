@@ -22,8 +22,6 @@ export default function TaskList({
 
     return(
         <div className="w-full rounded-lg border border-[#E2E8F0] p-4">
-            <p>Tasks: {tasks.length}</p>
-
             {/*Task Information (TODAY) */}
             <h1 className="flex text-lg font-bold "><Calendar className="mr-2" />Today</h1>
             
