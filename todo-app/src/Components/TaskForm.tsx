@@ -59,9 +59,8 @@ export default function TaskForm({
         return;
     }
 
-    onAddTask(savedTask); 
-
-        
+    onAddTask(savedTask);
+    onClose();        
     }
 
 
