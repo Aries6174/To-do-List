@@ -100,7 +100,7 @@ export default function TaskCard({ task, onTaskUpdate, onTaskDelete }: { task: T
                     {formattedDate}
                 </h2>
                 <div className="ml-8 flex items-center gap-2">
-                    <button onClick={handleFavorite}>
+                    <button onClick={handleFavorite} aria-label="Favorite task">
                         <Star 
                             className={`h-6 w-6 hover:text-yellow-400 hover:fill-yellow-400 ${
                             task.favorite
