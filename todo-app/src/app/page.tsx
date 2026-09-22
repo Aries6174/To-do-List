@@ -103,6 +103,8 @@ export default function Home() {
                 }}
                 
                 onTaskDelete={(taskId) => {
+                  console.log("Removing task from state:", taskId);
+                  
                   setTasks((currentTasks) =>
                     currentTasks.filter((task) => task.id !== taskId))
                 }}

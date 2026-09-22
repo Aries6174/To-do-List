@@ -127,41 +127,49 @@ describe("PATCH /api/tasks/[id]", () => {
         expect(task.completed).toBe(true);
     });
 
-    it("rejects an invalid priority", async () => {
-        const request = new Request("http://localhost/api/tasks/1", {
-            method: "PATCH",
-            headers:{
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                priority: "urgent",
-            }),
-        });
+    const invalidPriorities = ["urgent", "medium", "", "critical"];
 
-        const response = await PATCH(request, {
-            params: Promise.resolve({ id: "1" }),
-        });
-        
-        expect(response.status).toBe(400);
-    });
+    for (const priority of invalidPriorities){
+        it(`rejects an invalid priority: ${priority || "empty"}`, async () => {
+            const request = new Request("http://localhost/api/tasks/1", {
+                method: "PATCH",
+                headers:{
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    priority,
+                }),
+            });
 
-    it("rejects an empty title", async () => {
-        const request = new Request("http://localhost/api/tasks/1", {
-            method: "PATCH",
-            headers: {
-                "Content-Type" : "application/json",
-            },
-            body:JSON.stringify({
-                title: "",
-            }),
+            const response = await PATCH(request, {
+                params: Promise.resolve({ id: "1" }),
+            });
+            
+            expect(response.status).toBe(400);
         });
+    }
 
-        const response = await PATCH(request, {
-            params: Promise.resolve({ id: "1" }),
+    const invalidTitles = ["", " ", "   "];
+
+    for (const title of invalidTitles){
+        it(`rejects an empty title: ${title || "empty"}`, async () => {
+            const request = new Request("http://localhost/api/tasks/1", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type" : "application/json",
+                },
+                body:JSON.stringify({
+                    title,
+                }),
+            });
+
+            const response = await PATCH(request, {
+                params: Promise.resolve({ id: "1" }),
+            });
+
+            expect(response.status).toBe(400);
         });
-
-        expect(response.status).toBe(400);
-    });
+    }
 });
 
 

@@ -28,14 +28,21 @@ export default function TaskCard({ task, onTaskUpdate, onTaskDelete }: { task: T
     };
 
     const handleDelete = async () => {
-        const response = await fetch(`/api/tasks/${task.id}`, { 
+        console.log("Deleting task:", task.id);
+
+        const response = await fetch(`/api/tasks/${task.id}`, {
             method: "DELETE",
         });
 
-        if (response.ok){
+        console.log("DELETE status:", response.status);
+
+        if (response.ok) {
+            console.log("Calling onTaskDelete:", task.id);
             onTaskDelete(task.id);
+        } else {
+            console.log("DELETE failed");
         }
-    }
+    };
 
     const handleFavorite = async () => {
         const response = await fetch(`/api/tasks/${task.id}`, {
@@ -64,7 +71,9 @@ export default function TaskCard({ task, onTaskUpdate, onTaskDelete }: { task: T
 
     return(
         <>
-            <div className="flex w-full flex-wrap items-center gap-3 rounded-lg border border-[#E2E8F0] p-3 transition hover:bg-[#F8FAFC]">
+            <div 
+                data-testid={`task-card-${task.id}`}
+                className="flex w-full flex-wrap items-center gap-3 rounded-lg border border-[#E2E8F0] p-3 transition hover:bg-[#F8FAFC]">
                 <h2 className={`m-1 min-w-0 flex-1 ${
                     task.completed
                         ? "text-[#7E8B9E] line-through"
@@ -111,7 +120,10 @@ export default function TaskCard({ task, onTaskUpdate, onTaskDelete }: { task: T
                         />
                     </button>
                     <div className="relative">
-                        <button onClick={() => setIsMenuOpen(!isMenuOpen)} >
+                        <button
+                            aria-label="Task menu"
+                            onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        >
                             <MoreHorizontal className="h-6 w-6 hover:text-[#7E8B9E]" />
                         </button>
 
@@ -128,7 +140,7 @@ export default function TaskCard({ task, onTaskUpdate, onTaskDelete }: { task: T
                                 </button>
                                 
                                 <button
-                                    onClick={() => {
+                                    onClick={async () => {
                                         handleDelete();
                                         setIsMenuOpen(false);
                                     }}
