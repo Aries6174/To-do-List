@@ -36,7 +36,7 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     baseURL: 'http://localhost:3000',
-    channel: 'chrome',
+    channel: process.env.CI ? undefined : 'chrome',
     trace: 'on-first-retry',
   },
 
