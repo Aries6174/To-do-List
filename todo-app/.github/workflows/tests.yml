@@ -26,10 +26,14 @@ jobs:
         --health-retries=10
         --health-start-period=30s
 
-    env:
-      DATABASE_URL: postgresql://postgres:Loackenhearth@localhost:5432/taskflow_test
-
+  env:
+    DATABASE_URL: postgresql://postgres:Loackenhearth@localhost:5432/taskflow_test
+    
     steps:
+      - name: Set up test database
+        run: npx prisma migrate deploy
+
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
