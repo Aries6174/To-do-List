@@ -11,7 +11,7 @@
     "postinstall": "prisma skills sync || exit 0",
     "contract:emit": "prisma contract emit",
     "test": "jest",
-    "test:e2e": "cross-env DATABASE_URL=postgresql://postgres:YOUR_PASSWORD@localhost:5432/taskflow_test next dev"
+    "test:e2e": "playwright test tests/tasks.spec.ts --workers=1"
   },
   "dependencies": {
     "@prisma/client": "^7.10.0",
