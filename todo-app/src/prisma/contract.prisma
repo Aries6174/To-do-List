@@ -1,5 +1,13 @@
 // use prisma-8
 
+model User {
+  id     Int    @id @default(autoincrement())
+  name   String
+  email  String @unique
+
+  tasks Task[]
+}
+
 model Task {
   id          Int      @id @default(autoincrement())
   title       String
@@ -11,4 +19,7 @@ model Task {
   completed   Boolean  @default(false)
   createdAt   TimestamptzString @default(now())
   updatedAt   temporal.updatedAtString()
+
+  userId      Int?
+  user        User?     @relation(fields: [userId], references: [id])
 }

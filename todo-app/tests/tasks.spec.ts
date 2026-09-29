@@ -524,3 +524,48 @@ test('API can create a task', async ({ request }) => {
     expect(task.priority).toBe('high');
     expect(task.completed).toBe(false);
 });
+
+test('API rejects an invalid priority', async ({ request }) => {
+    const response = await request.post('/api/tasks', {
+        data: {
+            title: 'Invalid Priority Task',
+            description: 'Testing invalid priority',
+            category: 'Work',
+            dueDate: '2026-09-25',
+            priority: 'urgent',
+            favorite: false,
+        },
+    });
+
+    expect(response.status()).toBe(400);
+});
+
+test('API rejects an empty title', async ({ request }) => {
+    const response = await request.post('/api/tasks', {
+        data: {
+            title: '',
+            description: 'Testing empty title',
+            category: 'Work',
+            dueDate: '2026-09-25',
+            priority: 'high',
+            favorite: false,
+        },
+    });
+
+    expect(response.status()).toBe(400);
+});
+
+test('API rejects a whitespace-only title', async ({ request }) => {
+    const response = await request.post('/api/tasks', {
+        data: {
+            title: '   ',
+            description: 'Testing whitespace title',
+            category: 'Work',
+            dueDate: '2026-09-25',
+            priority: 'high',
+            favorite: false,
+        },
+    });
+
+    expect(response.status()).toBe(400);
+});
