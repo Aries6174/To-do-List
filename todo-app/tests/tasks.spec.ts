@@ -327,3 +327,200 @@ for (const priority of priorities) {
         ).toBeVisible();
     });
 }
+
+test('user can filter favorite tasks', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(page.getByText(/Good Afternoon/)).toBeVisible();
+
+    // Create first task
+    await page.getByRole('button', { name: /add task/i }).click();
+
+    await page.getByPlaceholder('Enter task name').fill('Favorite Task');
+    await page.getByPlaceholder('Enter description').fill('Testing favorites');
+    await page.getByRole('combobox').selectOption('work');
+    await page.locator('input[type="date"]').fill('2026-09-25');
+
+    await page.getByRole('dialog').getByText('High', { exact: true }).click();
+
+    await page.getByRole('dialog')
+        .getByRole('button', { name: 'Add Task' })
+        .click();
+
+    await expect(page.getByText('Favorite Task').first()).toBeVisible();
+
+    // Favorite the task
+    const taskCard = page.getByTestId(/task-card-/).filter({
+        hasText: 'Favorite Task'
+    }).last();
+
+    await taskCard.getByRole('button', { name: /favorite/i }).click();
+
+    // Open filter menu
+    await page.getByRole('button', { name: /filter/i }).click();
+
+    // Apply Favorites filter
+    await page.getByRole('button', { name: 'Favorites', exact: true }).click();
+    
+    // Verify the task appears
+    await expect(page.getByText('Favorite Task').first()).toBeVisible();
+});
+
+test('user can filter completed tasks', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(page.getByText(/Good Afternoon/)).toBeVisible();
+
+    // Create task
+    await page.getByRole('button', { name: /add task/i }).click();
+
+    await page.getByPlaceholder('Enter task name').fill('Completed Filter Task');
+    await page.getByPlaceholder('Enter description').fill('Testing completed filter');
+    await page.getByRole('combobox').selectOption('work');
+    await page.locator('input[type="date"]').fill('2026-09-25');
+
+    await page.getByRole('dialog').getByText('High', { exact: true }).click();
+
+    await page.getByRole('dialog')
+        .getByRole('button', { name: 'Add Task' })
+        .click();
+
+    await expect(
+        page.getByText('Completed Filter Task').first()
+    ).toBeVisible();
+
+    // Mark task as completed
+    const taskCard = page.getByTestId(/task-card-/).filter({
+        hasText: 'Completed Filter Task'
+    }).last();
+
+    await taskCard.locator('input[type="checkbox"]').click();
+
+    await expect(
+        taskCard.locator('input[type="checkbox"]')
+    ).toBeChecked();
+
+    // Open filter menu
+    await page.getByRole('button', { name: /filter/i }).click();
+
+    // Select Completed
+    await page.getByRole('button', {
+        name: 'Completed',
+        exact: true
+    }).click();
+
+    // Verify task appears
+    await expect(
+        page.getByText('Completed Filter Task').first()
+    ).toBeVisible();
+});
+
+test('user can filter active tasks', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(page.getByText(/Good Afternoon/)).toBeVisible();
+
+    // Create task
+    await page.getByRole('button', { name: /add task/i }).click();
+
+    await page.getByPlaceholder('Enter task name').fill('Active Filter Task');
+    await page.getByPlaceholder('Enter description').fill('Testing active filter');
+    await page.getByRole('combobox').selectOption('work');
+    await page.locator('input[type="date"]').fill('2026-09-25');
+
+    await page.getByRole('dialog').getByText('High', { exact: true }).click();
+
+    await page.getByRole('dialog')
+        .getByRole('button', { name: 'Add Task' })
+        .click();
+
+    await expect(
+        page.getByText('Active Filter Task').first()
+    ).toBeVisible();
+
+    // Open filter menu
+    await page.getByRole('button', { name: /filter/i }).click();
+
+    // Select Active
+    await page.getByRole('button', {
+        name: 'Active',
+        exact: true
+    }).click();
+
+    // Verify task appears
+    await expect(
+        page.getByText('Active Filter Task').first()
+    ).toBeVisible();
+});
+
+test('user cannot create a task with only whitespace in the title', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(page.getByText(/Good Afternoon/)).toBeVisible();
+
+    await page.getByRole('button', { name: /add task/i }).click();
+
+    await expect(page.getByRole('dialog')).toBeVisible();
+
+    await page.getByPlaceholder('Enter task name').fill('   ');
+    await page.getByPlaceholder('Enter description').fill('Testing whitespace title');
+    await page.getByRole('combobox').selectOption('work');
+    await page.locator('input[type="date"]').fill('2026-09-25');
+
+    await page.getByRole('dialog').getByText('High', { exact: true }).click();
+
+    await page.getByRole('dialog')
+        .getByRole('button', { name: 'Add Task' })
+        .click();
+
+    await expect(page.getByRole('dialog')).toBeVisible();
+});
+
+test('user can create a task with special characters', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(page.getByText(/Good Afternoon/)).toBeVisible();
+
+    await page.getByRole('button', { name: /add task/i }).click();
+
+    await expect(page.getByRole('dialog')).toBeVisible();
+
+    const title = `QA Test & Review (100%)`;
+
+    await page.getByPlaceholder('Enter task name').fill(title);
+    await page.getByPlaceholder('Enter description').fill('Testing special characters');
+    await page.getByRole('combobox').selectOption('work');
+    await page.locator('input[type="date"]').fill('2026-09-25');
+
+    await page.getByRole('dialog').getByText('High', { exact: true }).click();
+
+    await page.getByRole('dialog')
+        .getByRole('button', { name: 'Add Task' })
+        .click();
+
+    await expect(page.getByRole('dialog')).not.toBeVisible();
+
+    await expect(page.getByText(title, { exact: true }).first()).toBeVisible();
+});
+
+test('API can create a task', async ({ request }) => {
+    const response = await request.post('/api/tasks', {
+        data: {
+            title: 'API Test Task',
+            description: 'Testing task creation through the API',
+            category: 'Work',
+            dueDate: '2026-09-25',
+            priority: 'high',
+            favorite: false,
+        },
+    });
+
+    expect(response.ok()).toBeTruthy();
+
+    const task = await response.json();
+
+    expect(task.title).toBe('API Test Task');
+    expect(task.category).toBe('Work');
+    expect(task.priority).toBe('high');
+    expect(task.completed).toBe(false);
+});

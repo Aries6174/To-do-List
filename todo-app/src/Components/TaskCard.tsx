@@ -28,19 +28,12 @@ export default function TaskCard({ task, onTaskUpdate, onTaskDelete }: { task: T
     };
 
     const handleDelete = async () => {
-        console.log("Deleting task:", task.id);
-
         const response = await fetch(`/api/tasks/${task.id}`, {
             method: "DELETE",
         });
 
-        console.log("DELETE status:", response.status);
-
         if (response.ok) {
-            console.log("Calling onTaskDelete:", task.id);
             onTaskDelete(task.id);
-        } else {
-            console.log("DELETE failed");
         }
     };
 
