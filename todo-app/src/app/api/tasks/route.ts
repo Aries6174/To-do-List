@@ -1,12 +1,34 @@
 import { db } from "@/prisma/db";
-import { taskSchema } from "@/lib/validations/task"
+import { taskSchema } from "@/lib/validations/task";
+import { verifySession } from "@/lib/session";
 
 export async function GET() {
-    const tasks = await db.orm.public.Task.all();
+    const session = await verifySession();
+    
+    if(!session) {
+        return Response.json(
+            { error: "Unauthorized" },
+            { status: 401 }
+        );
+    }
+
+    const tasks = await db.orm.public.Task
+        .where({ userId: session.userId })
+        .all();
+
     return Response.json(tasks);
 }
 
 export async function POST(request: Request) {
+    const session = await verifySession();
+
+    if (!session) {
+        return Response.json(
+            { error: "Unauthorized" },
+            { status: 401 }
+        );
+    }
+
     const body = await request.json();
 
     const result = taskSchema.safeParse(body);
@@ -26,7 +48,8 @@ export async function POST(request: Request) {
         priority: result.data.priority,
         favorite: result.data.favorite,
         completed: false,
+        userId: session.userId,
     });
 
-    return Response.json(task);
+    return Response.json(task, { status: 201 });
 }

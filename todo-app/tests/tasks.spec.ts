@@ -569,3 +569,18 @@ test('API rejects a whitespace-only title', async ({ request }) => {
 
     expect(response.status()).toBe(400);
 });
+
+test("can register a user", async ({ request }) => {
+    const response = await request.post("/api/auth/register", {
+        data: {
+            name: "Test User",
+            email: "test@example.com",
+            password: "TestPassword123",
+        },
+    });
+
+    console.log("Status:", response.status());
+    console.log("Response:", await response.json());
+
+    expect(response.status()).toBe(201);
+});
