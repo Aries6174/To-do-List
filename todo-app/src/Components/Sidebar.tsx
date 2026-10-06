@@ -1,13 +1,28 @@
+"use client";
+
 import {
   House,
   Check,
   Calendar,
   Star,
   CircleCheck,
-  Settings
+  Settings,
+  LogOut,
 } from "lucide-react";
 
+import { useRouter } from "next/navigation";
+
 export default function Sidebar(){
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        await fetch("/api/auth/logout", { 
+            method: "POST",
+        });
+
+        router.push("/login");
+    };
+    
     return(
         <aside className="w-64 min-h-screen bg-[#1A2331] p-6 text-white shadow-2xl">
             <h1 className="mb-8 text-2xl font-bold flex">
@@ -55,6 +70,13 @@ export default function Sidebar(){
                 <Settings className="mr-3 text-[#3B82F6] group-hover:text-[#8FB8FF]" />Settings   
                 </a>
             </nav>
+            <button
+                onClick={handleLogout}
+                className="group block w-full rounded-lg px-4 py-2 hover:bg-gray-200 hover:text-[#1A2331] my-2 flex">
+                    <LogOut className="mr-3 text-[#3B82F6] group-hover:text-[#8FB8FF]" />
+                    Logout
+                </button>
+
         </aside>
     );
 }

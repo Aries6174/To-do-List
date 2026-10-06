@@ -1,9 +1,42 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState("");
+
+    const router = useRouter();
+
+    const handleSubmit = async (e:React.FormEvent) => {
+        e.preventDefault();
+
+        setError("");
+        
+        const response = await fetch("/api/auth/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email,
+                password,
+            }),
+        });
+
+        const data = await response.json();
+
+        if(!response.ok) {
+            setError(data.error ?? "Login failed");
+            return;
+        }
+
+        router.push("/");
+    };
 
     return (
         <main className="min-h-screen bg-slate-50 flex items-center justify-center p-6">
@@ -74,7 +107,7 @@ export default function LoginPage() {
                             </p>
                         </div>
 
-                        <form className="space-y-5">
+                        <form onSubmit={handleSubmit} className="space-y-5">
 
                             {/* Email */}
                             <div>
@@ -89,6 +122,8 @@ export default function LoginPage() {
                                     id="email"
                                     type="email"
                                     placeholder="you@example.com"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                                 />
                             </div>
@@ -107,6 +142,8 @@ export default function LoginPage() {
                                         id="password"
                                         type={showPassword ? "text" : "password"}
                                         placeholder="Enter your password"
+                                        value={password}
+                                        onChange={(e) => setPassword(e.target.value)}
                                         className="w-full rounded-lg border border-slate-300 px-4 py-3 pr-16 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                                     />
 
@@ -139,6 +176,12 @@ export default function LoginPage() {
                                     Forgot password?
                                 </button>
                             </div>
+
+                            {error && (
+                                <p className="text-sm text-red-500">
+                                    {error}
+                                </p>
+                            )}
 
                             {/* Login */}
                             <button

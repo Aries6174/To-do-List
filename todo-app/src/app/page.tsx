@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Task } from "@/types/task"
 
 import Sidebar from "@/Components/Sidebar";
@@ -9,11 +10,14 @@ import AddTaskButton from "@/Components/AddTaskButton"
 import TaskList from "@/Components/TaskList"
 
 export default function Home() {
+  const router = useRouter();
+
   const [tasks, setTasks] = useState<Task[]>([]);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [userName, setUserName] = useState("");
 
 
   const filteredTasks = tasks.filter((task) => {
@@ -39,6 +43,7 @@ export default function Home() {
         if (!response.ok){
           throw new Error("Failed to fetch task");
         }
+
         const tasks = await response.json();
         
         setTasks(tasks);
@@ -53,10 +58,27 @@ export default function Home() {
     getTasks();
   }, []);
 
+  useEffect(() => {
+    const getUser = async () => {
+      const response = await fetch("/api/auth/me");
+
+      if(!response.ok) {
+        router.push("/login");
+        return;
+      }
+
+      const user = await response.json();
+
+      setUserName(user.name);
+    };
+
+    getUser();
+  }, []);
+
+
   const addTask = (newTask:Task) => {
     setTasks((currentTasks) => [...currentTasks, newTask]);
   };
-
 
   return (
     <main className="flex min-h-screen bg-white text-black">
@@ -71,7 +93,7 @@ export default function Home() {
         <div className="flex p-8 justify-between"> {/*Top Message*/}
           <div className="self-start">
             <h1 className="text-[25px] font-bold">
-              Good Afternoon, [Name]!
+              Good Afternoon, {userName}!
             </h1>
             <p className="text-[#7E8B9E] pt-2">
               Here's what you need done today.

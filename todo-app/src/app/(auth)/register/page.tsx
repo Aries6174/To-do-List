@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
     const [name, setName] = useState("");
@@ -11,13 +12,40 @@ export default function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const [error, setError] = useState("");
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        console.log(name);
-        console.log(email);
-        console.log(password);
-        console.log(confirmPassword);
+        setError("");
+
+        if(password !== confirmPassword){
+            setError("Passwords do not match");
+            return;
+        }
+
+        const response = await fetch("/api/auth/register", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                name, 
+                email, 
+                password
+            }),
+        });
+
+        const data = await response.json();
+
+        if(!response.ok){
+            setError(data.error ?? "Registration failed");
+            return;
+        }
+
+        const router = useRouter();
+
+        router.push("/login");
     }
 
     return (
@@ -187,6 +215,13 @@ export default function RegisterPage() {
                                     </button>
                                 </div>
                             </div>
+                                        
+                            {error && (
+                                <p className="text-sm text-red-500">
+                                    {error}
+                                </p>
+                            )}
+                                    
 
                             <button
                                 type="submit"

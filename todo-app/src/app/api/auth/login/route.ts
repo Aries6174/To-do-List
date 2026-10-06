@@ -19,7 +19,7 @@ export async function POST(request: Request) {
 
     if (!user) {
         return Response.json(
-            { error: "invalid email or password" },
+            { error: "Invalid email or password" },
             { status: 401 }
         );
     }
