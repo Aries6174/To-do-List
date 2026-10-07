@@ -48,6 +48,13 @@ export async function PATCH(
         );
     }
 
+    if (Object.keys(result.data).length === 0 && body.completed === undefined) {
+        return Response.json(
+            { errors: "No fields to update" },
+            { status: 400 }
+        );
+    }
+
     const updateData: Record<string, unknown> = {};
 
     if (result.data.title !== undefined) updateData.title = result.data.title;
