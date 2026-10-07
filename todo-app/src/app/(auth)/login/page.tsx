@@ -124,7 +124,7 @@ export default function LoginPage() {
                                     placeholder="you@example.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                                    className="w-full rounded-lg border text-slate-900 border-slate-300 px-4 py-3 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                                 />
                             </div>
 
@@ -144,7 +144,7 @@ export default function LoginPage() {
                                         placeholder="Enter your password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full rounded-lg border border-slate-300 px-4 py-3 pr-16 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                                        className="w-full rounded-lg border text-slate-900 border-slate-300 px-4 py-3 pr-16 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
                                     />
 
                                     <button
@@ -164,7 +164,7 @@ export default function LoginPage() {
                                 <label className="flex items-center gap-2 text-slate-600">
                                     <input
                                         type="checkbox"
-                                        className="rounded border-slate-300 text-blue-500"
+                                        className="rounded text-slate-900 border-slate-300 text-blue-500"
                                     />
                                     Remember me
                                 </label>
