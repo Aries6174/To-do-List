@@ -44,6 +44,17 @@ The main objectives are to:
 
 ## 4. Testing Types
 
+### Unit and Component Testing
+
+Jest and React Testing Library are used to test individual application components and API route behavior.
+
+Examples:
+
+* Testing TaskCard behavior
+* Testing TaskForm behavior
+* Testing task API route behavior
+* Testing input validation
+
 ### UI Testing
 
 Playwright is used to verify functionality through the application's user interface.
@@ -66,7 +77,9 @@ Examples:
 * Creating tasks through the API
 * Validating task input
 * Testing invalid priority values
-* Testing empty and whitespace-only titles
+* Testing invalid task IDs
+* Testing invalid completion values
+* Testing empty task updates
 
 ### Security Testing
 
@@ -88,7 +101,7 @@ Examples:
 
 **API:** Next.js API Routes
 
-**Testing Framework:** Playwright
+**Testing Framework:** Jest, React Testing Library, Playwright
 
 **Test Browser:** Chromium
 
@@ -130,6 +143,14 @@ Testing is considered successful when:
 
 ## 9. Current Test Coverage
 
-The current Playwright test suite contains **37 automated tests** covering UI, API, authentication, validation, and authorization scenarios.
+The automated test suite currently contains:
 
-The full test suite currently passes successfully.
+* **19 Jest tests**
+* **42 Playwright tests**
+* **61 automated tests in total**
+
+The Jest suite covers component and API route behavior.
+
+The Playwright suite covers UI workflows, API testing, authentication, validation, and authorization.
+
+The full automated test suite currently passes successfully.

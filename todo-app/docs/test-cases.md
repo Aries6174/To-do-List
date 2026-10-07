@@ -69,12 +69,15 @@
 
 ## 8. Test Execution
 
-The automated test suite is implemented using Playwright.
+The automated test suite is implemented using Jest, React Testing Library, and Playwright.
+
+Jest is used for component and API route testing, while Playwright is used for UI, API, authentication, and authorization testing.
 
 Tests are organized into:
 
 ```text
 tests/
+
 ├── api/
 │   ├── auth.spec.ts
 │   └── tasks.spec.ts
@@ -82,12 +85,11 @@ tests/
 │   └── authorization.spec.ts
 └── ui/
     └── tasks.spec.ts
-```
 
 ### Current Result
 
-**Total automated tests:** 37
+**Total automated tests:** 42
 
-**Result:** 37 passed
+**Result:** 42 passed
 
 **Status:** PASS

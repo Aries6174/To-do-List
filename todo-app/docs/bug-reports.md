@@ -5,7 +5,9 @@
 ## BUG-001 — UI Tests Failed Because Browser Was Not Authenticated
 
 **Severity:** High
+
 **Priority:** High
+
 **Status:** Resolved
 
 ### Description
@@ -40,7 +42,9 @@ The UI tests were updated to perform the login through the browser page before t
 ## BUG-002 — Playwright Could Not Check Hidden Priority Radio Button
 
 **Severity:** Medium
+
 **Priority:** Medium
+
 **Status:** Resolved
 
 ### Description
@@ -68,15 +72,3 @@ The radio input used a hidden CSS class while the visible priority option was re
 ### Resolution
 
 The test was changed to click the visible priority label instead of directly checking the hidden input.
-
----
-
-## BUG-003 — API Tests Returned Unauthorized After Test Reorganization
-
-**Severity:** High
-**Priority:** High
-**Status:** Resolved
-
-### Description
-
-After separating the Playwright tests into AP
