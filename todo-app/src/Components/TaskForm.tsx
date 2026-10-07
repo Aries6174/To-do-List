@@ -22,7 +22,6 @@ export default function TaskForm({
     task?: Task;
     onClose: () => void;
 }) {
-
     const [title, setTitle] = useState(task?.title ?? "");
     const [description, setDescription] = useState(task?.description ?? "");
     const [category, setCategory] = useState(task?.category ?? "");
