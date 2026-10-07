@@ -38,3 +38,18 @@ test("cannot delete a task without logging in", async ({ request }) => {
     expect(response.status()).toBe(401);
 });
 
+function uniqueEmail(prefix: string) {
+    return `${prefix}-${Date.now()}@example.com`;
+}
+
+test("can register a user", async ({ request }) => {
+    const response = await request.post("/api/auth/register", {
+        data: {
+            name: "Test User",
+            email: uniqueEmail("test-user"),
+            password: "TestPassword123",
+        },
+    });
+
+    expect(response.status()).toBe(201);
+});
