@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "TodoStack",
+  title: "TaskFlow",
   description: "app made by Adrian Joel Jaspa",
 };
 

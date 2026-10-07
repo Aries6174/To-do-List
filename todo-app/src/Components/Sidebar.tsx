@@ -26,7 +26,7 @@ export default function Sidebar(){
     return(
         <aside className="w-64 min-h-screen bg-[#1A2331] p-6 text-white shadow-2xl">
             <h1 className="mb-8 text-2xl font-bold flex">
-                <Check className="mr-3 text-[#3B82F6]" />TodoStack
+                <Check className="mr-3 text-[#3B82F6]" />TaskFlow
             </h1>
 
             <nav className="space-y-2">

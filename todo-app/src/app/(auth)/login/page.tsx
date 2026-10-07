@@ -91,11 +91,11 @@ export default function LoginPage() {
 
                         <div className="text-center mb-8">
                             <div className="flex justify-center mb-4">
-                                <div className="w-12 h-12 rounded-xl bg-blue-500 flex items-center justify-center">
-                                    <span className="text-white text-2xl">
-                                        ✓
-                                    </span>
-                                </div>
+                                <img
+                                    src="/TF_Logo.png"
+                                    alt="TaskFlow"
+                                    className="w-20 h-20 object-contain rounded-xl"
+                                />
                             </div>
 
                             <h2 className="text-3xl font-bold text-slate-900">
