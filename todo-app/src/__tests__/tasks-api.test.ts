@@ -1,3 +1,9 @@
+jest.mock("@/lib/session", () => ({
+    verifySession: jest.fn().mockResolvedValue({
+        userId: 1,
+    }),
+}));
+
 jest.mock("@/prisma/db", () => ({
     db: {
         orm: {
@@ -19,18 +25,20 @@ import { db } from "@/prisma/db";
 
 describe("GET /api/tasks", () => {
     it("return the tasks", async () => {
-        (db.orm.public.Task.all as jest.Mock).mockResolvedValue([
-            {
-                id: 1,
-                title: "Finish portfolio",
-                description: "Complete my Portfolio Project",
-                category: "Work",
-                dueDate: "2026-09-20",
-                priority: "high",
-                favorite: false,
-                completed: false,
-            },
-        ]);
+        (db.orm.public.Task.where as jest.Mock).mockReturnValue({
+            all: jest.fn().mockResolvedValue([
+                {
+                    id: 1,
+                    title: "Finish portfolio",
+                    description: "Complete my Portfolio Project",
+                    category: "Work",
+                    dueDate: "2026-09-20",
+                    priority: "high",
+                    favorite: false,
+                    completed: false,
+                },
+            ]),
+        });
 
         const response = await GET();
 
@@ -73,7 +81,7 @@ describe("GET /api/tasks", () => {
 
         const response = await POST(request);
         
-        expect(response.status).toBe(200);
+        expect(response.status).toBe(201);
 
         const task = await response.json();
 
@@ -178,7 +186,12 @@ describe("DELETE /api/tasks/[id]", () => {
         const deleteTask = jest.fn().mockResolvedValue(undefined);
 
         (db.orm.public.Task.where as jest.Mock).mockReturnValue({
-            delete:deleteTask,
+            first: jest.fn().mockResolvedValue({
+                id: 1,
+                title: "Finish portfolio",
+                userId: 1,
+            }),
+            delete: deleteTask,
         });
 
         const request = new Request("http://localhost/api/tasks/1", {

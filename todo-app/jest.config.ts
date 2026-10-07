@@ -7,8 +7,9 @@ const config: Config = {
     testPathIgnorePatterns: [
         "<rootDir>/tests/",
     ],
-    moduleNameMapper:{
+    moduleNameMapper: {
         "^@\\/(.*)$": "<rootDir>/src/$1",
+        "^server-only$": "<rootDir>/jest.server-only.ts",
     },
 };
 
